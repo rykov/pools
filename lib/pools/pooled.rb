@@ -9,6 +9,7 @@ module Pools
     def initialize(*args)
       options = args.extract_options!
       @connection_pool = ConnectionPool.new(self, options)
+      Pools.handler.add(@connection_pool, options[:pool_name])
     end
 
     def with_connection(&block)
@@ -28,7 +29,6 @@ module Pools
         methods.each do |method|
           define_method(method) do |*params|
             with_connection do |client|
-              puts "POOLED #{method.to_s}: #{params.inspect}"
               client.send(method, *params)
             end
           end

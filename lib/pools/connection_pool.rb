@@ -71,20 +71,20 @@ module Pools
     def initialize(pooled, options)
       @pooled = pooled
       @options = options
-    
+
       # The cache of reserved connections mapped to threads
       @reserved_connections = {}
-    
+
       # The mutex used to synchronize pool access
       @connection_mutex = Monitor.new
       @queue = @connection_mutex.new_cond
-    
+
       # default 5 second timeout unless on ruby 1.9
       @timeout = options[:wait_timeout] || 5
-    
+
       # default max pool size to 5
       @size = (options[:pool] && options[:pool].to_i) || 5
-    
+
       @connections = []
       @checked_out = []
     end
