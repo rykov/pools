@@ -1,3 +1,4 @@
+require 'pools'
 require 'cassandra/0.7'
 
 class Cassandra

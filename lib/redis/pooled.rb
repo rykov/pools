@@ -1,3 +1,4 @@
+require 'pools'
 require 'redis'
 
 class Redis
