@@ -18,8 +18,7 @@ class Cassandra
       client.disconnect! if client
     end
 
-    # Method not supported (yet?):
-    # :login!, :keyspace=,
+    preparation_methods :login!, :disable_node_auto_discovery!
 
     connection_methods :keyspace, :keyspaces, :servers, :schema,
       :auth_request, :thrift_client_options, :thrift_client_class,
