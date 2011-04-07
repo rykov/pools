@@ -219,6 +219,7 @@ module Pools
 
     def checkout_new_connection
       c = @pooled.__connection
+      @pooled.__prepare(c)
       @connections << c
       checkout_connection(c)
     end

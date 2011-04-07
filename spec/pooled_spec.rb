@@ -5,24 +5,30 @@ class TestPool
   include Pools::Pooled
 
   class Connection
-    attr_accessor :valid
+    attr_accessor :valid, :prepared
 
     def test_method
       '__TEST__'
     end
-    
+
     def test_method_with_args(input)
       input
+    end
+
+    def prepare_method(value)
+      self.prepared = value
     end
   end
 
   def __connection
     c = Connection.new
     c.valid = true
+    c.prepared = false
     c
   end
-  
-  connection_methods :test_method, :test_method_with_args
+
+  preparation_methods :prepare_method
+  connection_methods :test_method, :test_method_with_args, :prepared
 end
 
 describe Pools::Pooled do
@@ -103,10 +109,21 @@ describe Pools::Pooled do
       conn.should be_a(TestPool::Connection)
     end
   end
-  
+
   it "respond to client methods" do
     pool = TestPool.new
     pool.test_method.should == '__TEST__'
     pool.test_method_with_args('hi').should == 'hi'
+  end
+
+  it "not prematurely call preparation methods" do
+    pool = TestPool.new
+    pool.prepared.should be_false
+  end
+
+  it "not prematurely call preparation methods" do
+    pool = TestPool.new
+    pool.prepare_method(15)
+    pool.prepared.should == 15
   end
 end
