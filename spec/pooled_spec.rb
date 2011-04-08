@@ -18,6 +18,10 @@ class TestPool
     def prepare_method(value)
       self.prepared = value
     end
+
+    def yielding_method(value)
+      yield(value)
+    end
   end
 
   def __connection
@@ -28,7 +32,8 @@ class TestPool
   end
 
   preparation_methods :prepare_method
-  connection_methods :test_method, :test_method_with_args, :prepared
+  connection_methods :test_method, :test_method_with_args, :prepared,
+                     :yielding_method
 end
 
 describe Pools::Pooled do
@@ -114,6 +119,13 @@ describe Pools::Pooled do
     pool = TestPool.new
     pool.test_method.should == '__TEST__'
     pool.test_method_with_args('hi').should == 'hi'
+  end
+
+  it "respond to yielding methods" do
+    pool = TestPool.new
+    pool.yielding_method(15) do |value|
+      value.should == 15
+    end
   end
 
   it "not prematurely call preparation methods" do

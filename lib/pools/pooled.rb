@@ -32,9 +32,9 @@ module Pools
     module ClassMethods
       def connection_methods(*methods)
         methods.each do |method|
-          define_method(method) do |*params|
+          define_method(method) do |*params, &block|
             with_connection do |client|
-              client.send(method, *params)
+              client.send(method, *params, &block)
             end
           end
         end
