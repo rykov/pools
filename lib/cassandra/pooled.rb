@@ -1,5 +1,5 @@
 require 'pools'
-require 'cassandra/0.7'
+require 'cassandra/0.8'
 
 class Cassandra
   class Pooled
