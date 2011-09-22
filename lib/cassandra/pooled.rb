@@ -1,5 +1,9 @@
 require 'pools'
-require 'cassandra/0.8'
+
+class Cassandra; end
+unless Cassandra.respond_to?(:VERSION)
+  require 'cassandra/0.8'
+end
 
 class Cassandra
   class Pooled
