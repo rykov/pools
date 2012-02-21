@@ -5,7 +5,6 @@
 require 'thread'
 require 'monitor'
 require 'set'
-require 'active_support/core_ext/module/synchronization'
 
 module Pools
   # Raised when a connection could not be obtained within the connection
@@ -60,6 +59,7 @@ module Pools
   # * +wait_timeout+: number of seconds to block and wait for a connection
   #   before giving up and raising a timeout error (default 5 seconds).
   class ConnectionPool
+    include MonitorMixin
     attr_reader :options, :connections
 
     # Creates a new ConnectionPool object. +spec+ is a ConnectionSpecification
@@ -69,6 +69,7 @@ module Pools
     #
     # The default ConnectionPool maximum size is 5.
     def initialize(pooled, options)
+      super()
       @pooled = pooled
       @options = options
 
@@ -76,8 +77,7 @@ module Pools
       @reserved_connections = {}
 
       # The mutex used to synchronize pool access
-      @connection_mutex = Monitor.new
-      @queue = @connection_mutex.new_cond
+      @queue = self.new_cond
 
       # default 5 second timeout unless on ruby 1.9
       @timeout = options[:wait_timeout] || 5
@@ -119,27 +119,29 @@ module Pools
 
     # Returns true if a connection has already been opened.
     def connected?
-      !@connections.empty?
+      synchronize { !@connections.empty? }
     end
 
     # Disconnects all connections in the pool, and clears the pool.
     def disconnect!
-      @reserved_connections.each do |name,conn|
-        checkin conn
+      synchronize do
+        @reserved_connections = {}
+        @connections.each do |conn|
+          checkin conn
+          @pooled.__disconnect(conn)
+        end
+        @connections = []
       end
-      @reserved_connections = {}
-      @connections.each do |conn|
-        @pooled.__disconnect(conn)
-      end
-      @connections = []
     end
 
     # Verify active connections and remove and disconnect connections
     # associated with stale threads.
     def verify_active_connections! #:nodoc:
-      clear_stale_cached_connections!
-      @connections.each do |connection|
-        @pooled.__disconnect(connection)
+      synchronize do
+        clear_stale_cached_connections!
+        @connections.each do |connection|
+          @pooled.__disconnect(connection)
+        end
       end
     end
 
@@ -173,7 +175,7 @@ module Pools
     #   within the timeout period.
     def checkout
       # Checkout an available connection
-      @connection_mutex.synchronize do
+      synchronize do
         loop do
           conn = if @checked_out.size < @connections.size
                    checkout_existing_connection
@@ -203,14 +205,11 @@ module Pools
     # +conn+: an AbstractAdapter object, which was obtained by earlier by
     # calling +checkout+ on this pool.
     def checkin(conn)
-      @connection_mutex.synchronize do
+      synchronize do
         @checked_out.delete conn
         @queue.signal
       end
     end
-
-    synchronize :verify_active_connections!, :connected?, :disconnect!,
-                :with => :@connection_mutex
 
   private
     def current_connection_id #:nodoc:
