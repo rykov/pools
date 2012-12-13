@@ -1,6 +1,8 @@
 pools
 -----
 
+[![Gem Version](https://fury-badge.herokuapp.com/rb/pools.png)](http://badge.fury.io/rb/pools)
+
 Provides connection pooling for multiple services that
 use persistent connections
 
