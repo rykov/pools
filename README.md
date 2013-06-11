@@ -1,7 +1,7 @@
 pools
 -----
 
-[![Gem Version](https://fury-badge.herokuapp.com/rb/pools.png)](http://badge.fury.io/rb/pools)
+<a href="http://badge.fury.io/rb/pools"><img src="https://badge.fury.io/rb/pools@2x.png" alt="Gem Version" height="18"></a>
 [![Build Status](https://travis-ci.org/rykov/pools.png)](https://travis-ci.org/rykov/pools)
 
 Provides connection pooling for multiple services that
