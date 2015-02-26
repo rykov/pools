@@ -95,15 +95,19 @@ module Pools
     # #connection can be called any number of times; the connection is
     # held in a hash keyed by the thread id.
     def connection
-      @reserved_connections[current_connection_id] ||= checkout
+      @reserved_connections[current_connection_id] || synchronize do
+        @reserved_connections[current_connection_id] ||= checkout
+      end
     end
 
     # Signal that the thread is finished with the current connection.
     # #release_connection releases the connection-thread association
     # and returns the connection to the pool.
     def release_connection(with_id = current_connection_id)
-      conn = @reserved_connections.delete(with_id)
-      checkin conn if conn
+      synchronize do
+        conn = @reserved_connections.delete(with_id)
+        checkin conn if conn
+      end
     end
 
     # If a connection already exists yield it to the block.  If no connection
@@ -111,7 +115,7 @@ module Pools
     # connection when finished.
     def with_connection
       connection_id = current_connection_id
-      fresh_connection = true unless @reserved_connections[connection_id]
+      fresh_connection = synchronize { !@reserved_connections[connection_id] }
       yield connection
     ensure
       release_connection(connection_id) if fresh_connection
@@ -148,12 +152,14 @@ module Pools
     # Return any checked-out connections back to the pool by threads that
     # are no longer alive.
     def clear_stale_cached_connections!
-      keys = @reserved_connections.keys - Thread.list.find_all { |t|
-        t.alive?
-      }.map { |thread| thread.object_id }
-      keys.each do |key|
-        checkin @reserved_connections[key]
-        @reserved_connections.delete(key)
+      synchronize do
+        keys = @reserved_connections.keys - Thread.list.find_all { |t|
+          t.alive?
+        }.map { |thread| thread.object_id }
+        keys.each do |key|
+          checkin @reserved_connections[key]
+          @reserved_connections.delete(key)
+        end
       end
     end
 
