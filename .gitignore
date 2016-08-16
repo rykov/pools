@@ -1,1 +1,4 @@
-pools*.gem
+.DS_Store
+.bundle/*
+pools-*.gem
+Gemfile.lock
