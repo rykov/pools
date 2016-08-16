@@ -1,8 +1,8 @@
-pools
------
+Pools - Reusable Connection Pooling
+-----------------------------------
 
-<a href="http://badge.fury.io/rb/pools"><img src="https://badge.fury.io/rb/pools@2x.png" alt="Gem Version" height="18"></a>
-[![Build Status](https://travis-ci.org/rykov/pools.png)](https://travis-ci.org/rykov/pools)
+[![Gem Version](https://badge.fury.io/rb/pools.svg)](https://badge.fury.io/rb/pools)
+[![Build Status](https://travis-ci.org/rykov/pools.svg)](https://travis-ci.org/rykov/pools)
 
 Provides connection pooling for multiple services that
 use persistent connections
