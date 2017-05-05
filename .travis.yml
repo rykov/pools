@@ -6,10 +6,11 @@ before_script:
   - bundle update
 
 rvm:
-  - 2.3.1
-  - 2.2.5
+  - 2.4.1
+  - 2.3.4
+  - 2.2.7
   - ruby-head
-  - jruby-9.1.2.0
+  - jruby-9.1.8.0
 
 # ActiveSupport 4.x (5.x needs Ruby 2.2+)
 matrix:
