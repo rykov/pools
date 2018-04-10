@@ -6,16 +6,17 @@ before_script:
   - bundle update
 
 rvm:
-  - 2.4.1
-  - 2.3.4
-  - 2.2.7
+  - 2.5.1
+  - 2.4.4
+  - 2.3.7
+  - 2.2.10
   - ruby-head
-  - jruby-9.1.8.0
+  - jruby-head
 
 # ActiveSupport 4.x (5.x needs Ruby 2.2+)
 matrix:
   include:
-    - rvm: 2.1.9
+    - rvm: 2.1.10
       gemfile: Gemfile.as4
     - rvm: 2.0.0
       gemfile: Gemfile.as4
