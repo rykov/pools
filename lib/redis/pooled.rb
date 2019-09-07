@@ -26,14 +26,22 @@ class Redis
     connection_methods :info, :config, :flushdb, :flushall, :save,
       :bgsave, :bgrewriteaof, :get, :getset, :mget, :append, :substr,
       :strlen, :hgetall, :hget, :hdel, :hkeys, :keys, :randomkey,
-      :echo, :ping, :lastsave, :dbsize, :exists, :llen, :lrange,
+      :echo, :ping, :lastsave, :dbsize, :exists,
+
       :ltrim, :lindex, :linsert, :lset, :lrem, :rpush, :rpushx,
       :lpush, :lpushx, :rpop, :blpop, :brpop, :rpoplpush, :lpop,
+      :llen, :lrange,
+
       :smembers, :sismember, :sadd, :srem, :smove, :sdiff, :sdiffstore,
       :sinter, :sinterstore, :sunion, :sunionstore, :spop, :scard,
       :srandmember, :zadd, :zrank, :zrevrank, :zincrby, :zcard,
+
       :zrange, :zrangebyscore, :zcount, :zrevrange, :zremrangebyscore,
       :zremrangebyrank, :zscore, :zrem, :zinterstore, :zunionstore,
+
+      :xinfo, :xadd, :xtrim, :xdel, :xrange, :xrevrange, :xlen,
+      :xread, :xgroup, :xreadgroup, :xack, :xclaim, :xpending,
+
       :move, :setnx, :del, :rename, :renamenx, :expire, :persist,
       :ttl, :expireat, :hset, :hsetnx, :hmset, :mapped_hmset, :hmget,
       :mapped_hmget, :hlen, :hvals, :hincrby, :hexists, :monitor,
