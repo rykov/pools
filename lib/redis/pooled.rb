@@ -11,7 +11,11 @@ class Redis
     end
 
     def __connection
-      Redis.connect(@redis_options)
+      if Redis.respond_to?(:connect) # 3.x and earlier
+        Redis.connect(@redis_options)
+      else
+        Redis.new(@redis_options)
+      end
     end
 
     def __disconnect(client)
