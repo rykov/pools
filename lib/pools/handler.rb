@@ -12,7 +12,9 @@ module Pools
 
     # Add a new connection pool to the mix
     def add(pool, name = nil)
-      @pools[name || pool.object_id] = pool
+      key = name || pool.object_id
+      raise(%Q(Pool "#{name}" already exists)) if @pools[name]
+      @pools[name] = pool
     end
 
     # Returns any connections in use by the current thread back to the

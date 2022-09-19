@@ -103,9 +103,9 @@ describe Pools::Pooled do
 
   it "should not be connected on init" do
     cpool = TestPool.new(:pool => 1).connection_pool
-    cpool.connected?.should be_false
+    expect(cpool).to_not be_connected
     cpool.with_connection { }
-    cpool.connected?.should be_true
+    expect(cpool).to be_connected
   end
 
   it "with_connection provides a connection" do
@@ -129,8 +129,7 @@ describe Pools::Pooled do
   end
 
   it "not prematurely call preparation methods" do
-    pool = TestPool.new
-    pool.prepared.should be_false
+    expect(TestPool.new.prepared).to eq(false)
   end
 
   it "not prematurely call preparation methods" do
