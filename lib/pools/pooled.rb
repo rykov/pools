@@ -32,9 +32,15 @@ module Pools
     module ClassMethods
       def connection_methods(*methods)
         methods.each do |method|
-          define_method(method) do |*params, &block|
+          define_method(method) do |*args, **kwargs, &block|
             with_connection do |client|
-              client.send(method, *params, &block)
+              # https://bugs.ruby-lang.org/issues/14415
+              # Needed for pre-2.5 Ruby support
+              if !kwargs.empty?
+                client.send(method, *args, **kwargs, &block)
+              else
+                client.send(method, *args, &block)
+              end
             end
           end
         end

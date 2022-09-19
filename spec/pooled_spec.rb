@@ -15,6 +15,10 @@ class TestPool
       input
     end
 
+    def test_method_with_kwargs(input: nil)
+      input
+    end
+
     def prepare_method(value)
       self.prepared = value
     end
@@ -33,7 +37,7 @@ class TestPool
 
   preparation_methods :prepare_method
   connection_methods :test_method, :test_method_with_args, :prepared,
-                     :yielding_method
+                     :test_method_with_kwargs, :yielding_method
 end
 
 describe Pools::Pooled do
@@ -119,6 +123,7 @@ describe Pools::Pooled do
     pool = TestPool.new
     pool.test_method.should == '__TEST__'
     pool.test_method_with_args('hi').should == 'hi'
+    pool.test_method_with_kwargs(input: 'hi').should == 'hi'
   end
 
   it "respond to yielding methods" do

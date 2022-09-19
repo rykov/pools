@@ -21,7 +21,3 @@ matrix:
       gemfile: Gemfile.as4
     - rvm: 2.0.0
       gemfile: Gemfile.as4
-    - rvm: 1.9.3
-      gemfile: Gemfile.as4
-    - rvm: jruby-19mode
-      gemfile: Gemfile.as4
