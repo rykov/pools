@@ -7,7 +7,7 @@ describe Redis::Pooled do
 
   it "create a client" do
     rpool.with_connection do |conn|
-      conn.should be_a(Redis)
+      expect(conn).to be_a(Redis)
     end
   end
 end
