@@ -83,7 +83,7 @@ module Pools
       @timeout = options[:wait_timeout] || 5
 
       # default max pool size to 5
-      @size = (options[:pool] && options[:pool].to_i) || 5
+      @size = (@options.delete(:pool) || 5).to_i
 
       @connections = []
       @checked_out = []

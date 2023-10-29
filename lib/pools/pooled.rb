@@ -8,9 +8,11 @@ module Pools
 
     def initialize(*args)
       options = args.extract_options!
+      pool_name = options.delete(:pool_name)
+
       @preparation_chain = []
       @connection_pool = ConnectionPool.new(self, options)
-      Pools.handler.add(@connection_pool, options[:pool_name])
+      Pools.handler.add(@connection_pool, pool_name)
     end
 
     def with_connection(&block)
